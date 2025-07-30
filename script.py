@@ -52,3 +52,20 @@ def main():
     # Defining the CNN
     import torch.nn as nn
     import torch.nn.functional as F
+
+    class Net(nn.Module): # Base class for all nueral networks
+        def __init__(self):
+            super().__init__()
+            self.conv1 = nn.Conv2d(3, 6, 5) # Applies a 2D convolution over an input signal composed of several input planes.
+            # IMPORTANT VOCAB
+            # 2D Convolution: Puts a small matrix over a 2D image that transform inpiut data by highlighting or extracting certain features
+            self.pool = nn.MaxPool2d(2, 2) # Shrinks the image by keeping only the most important/notable pixel out of each group of 2x2 pixels
+            self.conv2 = nn.Conv2d(6, 16, 5) # 6 layer image, has 5x5 patches, and 16 different input channels to analyze the image in different ways
+            self.fc1 = nn.Linear(16 * 5 * 5, 120) # Flattens image into one long list of numbers to be analyzed by 120 neutrons. 400 images (16 5x5 batches)
+            self.fc2 = nn.Linear(120, 84) # Take 120 values from last layer and pass it into next layer with 84 more neruons
+            self.fc3 = nn.Linear(84, 10) # Take 84 values from last layer and pass it into next layer with 10 more neruons
+
+        def forward(self, x):
+            # x is the image
+            x = self.pool(F.relu(self.conv1(x))) 
+            # conv1 = first convolutional layer that looks at each 5x5 part of the image to find simple things like edges and colors. Will output 6 different B&W 
