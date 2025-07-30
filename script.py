@@ -117,3 +117,8 @@ def main():
                 running_loss = 0.0
 
     print("Finished Training")
+
+if __name__ == '__main__':
+    print("Starting the script...")
+    main()
+    print("Script execution completed.")
