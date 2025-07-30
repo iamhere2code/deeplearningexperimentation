@@ -68,4 +68,27 @@ def main():
         def forward(self, x):
             # x is the image
             x = self.pool(F.relu(self.conv1(x))) 
-            # conv1 = first convolutional layer that looks at each 5x5 part of the image to find simple things like edges and colors. Will output 6 different B&W 
+            # conv1 = first convolutional layer that looks at each 5x5 part of the image to find simple things like edges and colors. Will output 6 different B&W images
+            # relu = Rectified Linear Unit --> helps computer to ignore useless things like negative space
+            # pool = pooling layer, looks at 2x2 pixel groups and only keeps the pixel with the highest number
+            x = self.pool(F.relu(self.conv2(x))) # Same thing as above line, but with a different convolutional layer
+            x = torch.flatten(x, 1) # flatten all dimensions except batch
+            x = F.relu(self.fc1(x))
+            # fc1 = flatten list of numbers
+            #r relu activation = ignores weak signals
+            x = F.relu(self.fc2(x))
+            x = self.fc3(x)
+            return x
+
+    net = Net()
+    print("CNN model defined.")
+
+    print("Setting up loss function and optimizer...")
+    import torch.optim as optim
+
+    criterion = nn.CrossEntropyLoss()
+    # Cross Entropy: measures how far off neural networks are from the real answer. The function outputs a list of scores (logits) per class about model's confidence.
+    # Then, softmax function is applied to convert to probability. If computer is confidently wrong, it will be penalized higher.
+    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9) # SGD = stochastic gradient descent. net.parameters tells you what you can change in the model (essentially all trainable pieces of the network)
+    # lr = learning rate, how big each step is of the gradient descent (here, we are taking little steps to update weights)
+    # momemntum: adding a bit of speed to the optimazatin process
