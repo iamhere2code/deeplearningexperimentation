@@ -92,3 +92,28 @@ def main():
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9) # SGD = stochastic gradient descent. net.parameters tells you what you can change in the model (essentially all trainable pieces of the network)
     # lr = learning rate, how big each step is of the gradient descent (here, we are taking little steps to update weights)
     # momemntum: adding a bit of speed to the optimazatin process
+
+    print("Starting training process...")
+    for epoch in range(2):  # loop over the dataset multiple times(2 epochs)
+        print(f"Epoch {epoch + 1} in progress...")
+        running_loss = 0.0 # How much total loss overtime running the model
+        for i, data in enumerate(trainloader, 0): # Loop and counter at the same time. i is index of batch, data is actual batch
+            # get the inputs; data is a list of [inputs, labels]
+            inputs, labels = data # unpacking data
+
+            # zero the parameter gradients
+            optimizer.zero_grad()
+
+            # forward + backward + optimize
+            outputs = net(inputs)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+
+            # print statistics
+            running_loss += loss.item()
+            if i % 2000 == 1999:    # print every 2000 mini-batches
+                print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.6f}')
+                running_loss = 0.0
+
+    print("Finished Training")
