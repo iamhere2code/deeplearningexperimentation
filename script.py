@@ -17,7 +17,7 @@ def main():
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, 
                                             shuffle=True, num_workers=4) # Shuffles elements before each batch, how many workers to work on unpacking info
 
-     print("Loading test dataset...")
+    print("Loading test dataset...")
     testset = torchvision.datasets.CIFAR10(root='./data', train=False, # FALSE means this is a test dataset
                                         download=True, transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
@@ -37,3 +37,18 @@ def main():
         npimg = img.numpy()
         plt.imshow(np.transpose(npimg, (1, 2, 0))) # Rearranging the axis of the original np image
         plt.show() # Showing the lot
+
+    print("Fetching some random training images...")
+    # get some random training images
+    dataiter = iter(trainloader) # Iterating through datasets and picking one batch (of photos and labels) at a time 
+    images, labels = next(dataiter) # Labeling what's inside the data batch
+
+    # show images
+    #imshow(torchvision.utils.make_grid(images))
+    # print labels
+    print(' '.join(f'{classes[labels[j]]:5s}' for j in range(batch_size)))
+
+    print("Defining the CNN model...")
+    # Defining the CNN
+    import torch.nn as nn
+    import torch.nn.functional as F
